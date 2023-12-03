@@ -17,54 +17,50 @@ class BycicleLock
 
   private
 
-  # Gets the minimum distance between 2 dial numbers
-  def circular_distance(number1, number2)
-    clockwise_distance = (number2 - number1 + DIAL_NUMBERS) % DIAL_NUMBERS
-    counterclockwise_distance = (number1 - number2 + DIAL_NUMBERS) % DIAL_NUMBERS
-
-    [clockwise_distance, counterclockwise_distance].min_by { |num| num.abs }
-  end
-
   # Rotates the dial and/or passes to the next one
-  def rotate_dial(distance)
-    if distance.include?(0)
-      distance = distance.min_by { |num| num.abs }
-      if distance.positive?
+  def rotate_dial(diff)
+    if diff.zero?
+      @operations << "<"
+    elsif diff.positive?
+      diff.abs.times do |d|
         @operations << "+"
-        @operations << "<"
-        "+"
-      else
-        @operations << "-"
-        "-"
       end
     else
-      @operations << "<"
+      diff.abs.times do |d|
+        @operations << "-"
+      end
     end
   end
 
-  # Goes through each dial, gets the distance with other dials and rotates
+  # Gets the difference to the nearest unoccupied number
+  def nearest_unoccupied_number_diff(dial, dials)
+    return 0 unless dials.include?(dial)
+
+    left, right = dial - 1, dial + 1
+
+    loop do
+      return left - dial unless dials.include?(left)
+      return right - dial unless dials.include?(right)
+
+      left -= 1 if left >= 0
+      right += 1
+    end
+  end
+
+  # Goes through each dial, gets the distance to the nearest different number and rotates it
   def generate_operations(dials)
     dials.each_with_index do |number, dial|
       done = false
-      
+
       while done == false
         distance = []
         dials_copy = dials.dup
-        dials_copy.delete_at(dial)
 
-        dials_copy.each do |other_number|
-          distance << circular_distance(dials[dial], other_number)
-        end
+        num_diff = dials.count(dials[dial]) > 1 ? nearest_unoccupied_number_diff(number, dials) : 0
 
-        rotation = rotate_dial(distance)
+        rotate_dial(num_diff)
 
-        if rotation == "+"
-          dials[dial] += 1
-        elsif rotation == "-"
-          dials[dial] -= 1
-        else
-          done = true
-        end
+        !num_diff.zero? ? dials[dial] += num_diff : done = true
       end
     end
   end

@@ -19,8 +19,8 @@ class BycicleLock
 
   # Gets the minimum distance between 2 dial numbers
   def circular_distance(number1, number2)
-    clockwise_distance = (number2.ord - number1.ord + DIAL_NUMBERS) % DIAL_NUMBERS
-    counterclockwise_distance = - ((number1.ord - number2.ord + DIAL_NUMBERS) % DIAL_NUMBERS)
+    clockwise_distance = (number2 - number1 + DIAL_NUMBERS) % DIAL_NUMBERS
+    counterclockwise_distance = (number1 - number2 + DIAL_NUMBERS) % DIAL_NUMBERS
 
     [clockwise_distance, counterclockwise_distance].min_by { |num| num.abs }
   end
@@ -35,7 +35,6 @@ class BycicleLock
         "+"
       else
         @operations << "-"
-        @operations << "<"
         "-"
       end
     else
@@ -46,20 +45,26 @@ class BycicleLock
   # Goes through each dial, gets the distance with other dials and rotates
   def generate_operations(dials)
     dials.each_with_index do |number, dial|
-      distance = []
-      dials_copy = dials.dup
-      dials_copy.delete_at(dial)
+      done = false
+      
+      while done == false
+        distance = []
+        dials_copy = dials.dup
+        dials_copy.delete_at(dial)
 
-      dials_copy.each do |other_number|
-        distance << circular_distance(number, other_number)
-      end
+        dials_copy.each do |other_number|
+          distance << circular_distance(dials[dial], other_number)
+        end
 
-      rotation = rotate_dial(distance)
+        rotation = rotate_dial(distance)
 
-      if rotation == "+"
-        dials[dial] += 1
-      elsif rotation == "-"
-        dials[dial] -= 1
+        if rotation == "+"
+          dials[dial] += 1
+        elsif rotation == "-"
+          dials[dial] -= 1
+        else
+          done = true
+        end
       end
     end
   end

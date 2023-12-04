@@ -37,15 +37,24 @@ class BycicleLock
     return 0 unless dials.include?(dial)
 
     left, right = dial - 1, dial + 1
+    dial_distance = DIAL_NUMBERS - 1
 
     loop do
-      return left - dial unless dials.include?(left)
-      return right - dial unless dials.include?(right)
+      left = (left + DIAL_NUMBERS) % DIAL_NUMBERS  # Ensure left is within the valid range
+      right = right % DIAL_NUMBERS  # Ensure right is within the valid range
 
-      left -= 1 if left >= 0
+      left_diff = (dial - left) % DIAL_NUMBERS
+      right_diff = (right - dial) % DIAL_NUMBERS
+
+      return -left_diff if !dials.include?(left) || left_diff < right_diff
+      return right_diff if !dials.include?(right) || right_diff < left_diff
+
+      left -= 1
       right += 1
     end
   end
+
+
 
   # Goes through each dial, gets the distance to the nearest different number and rotates it
   def generate_operations(dials)

@@ -4,13 +4,13 @@
 # Exercises
 The exercises go as follows:  
  
-## Problem Statement  
+## 1 - Multiples  
 
 Write a program that prints the numbers from 1 to 100. For multiples of three, print the word “Senir” instead of the number. For multiples of five, print the word “Op” instead of the number.  
 
 For numbers which are multiples of both three and five, print “Senir Op” instead of the number.  
 
-## Problem Statement  
+##  2- Palindrome  
   
 A string is called a palindrome if it reads the same forwards and backwards. E.g., "a", "noon" and "tacocat" are palindromes but "cocoa" isn't.  
 A string is called a near-palindrome if we can rearrange its characters to make it a palindrome. For example, "aaa", "cocoa" and "xxyyzz" are near-palindromes but "abc" isn't.  
@@ -43,7 +43,7 @@ One optimal solution is to increment S[4] twice, changing the input string into 
 Returns: 4  
 
   
-## Problem Statement  
+## 3 - Bycicle Lock
 
 You have a bicycle lock. The locking mechanism consists of several dials. Each dial contains the digits 0-9 in a cycle, in this order. From each dial exactly one digit is visible.  
 Each dial can be rotated in either direction:  
